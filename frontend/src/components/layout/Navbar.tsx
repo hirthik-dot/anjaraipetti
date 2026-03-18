@@ -105,8 +105,8 @@ export default function Navbar() {
 
                 {/* Mobile Menu */}
                 {isMobileMenuOpen && (
-                    <div className="lg:hidden mt-4 pt-4 pb-6" style={{ borderTop: '1px solid #E8E3DD' }}>
-                        <div className="flex flex-col gap-4">
+                    <div className="lg:hidden fixed inset-x-0 top-[72px] bg-white border-b border-[#E8E3DD] shadow-xl p-6" style={{ maxHeight: 'calc(100vh - 72px)', overflowY: 'auto' }}>
+                        <div className="flex flex-col gap-6">
                             {navLinks.map((link) => (
                                 <Link
                                     key={link.href}

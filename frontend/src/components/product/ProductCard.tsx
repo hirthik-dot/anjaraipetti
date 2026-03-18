@@ -57,9 +57,9 @@ export default function ProductCard({ product }: ProductCardProps) {
                     </div>
                 )}
 
-                {/* Elegant Quick View */}
+                {/* Elegant Quick View - Only visible on hover for desktop, persistent small icon for mobile maybe? Actually, just let mobile users tap the image directly to view product. */}
                 {!isOutOfStock && (
-                    <div className="absolute inset-0 bg-transparent flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute inset-0 bg-transparent flex items-end justify-center pb-6 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
                         <span
                             className="bg-white/90 backdrop-blur-md border border-[#E8E3DD] text-[#2A2626] text-[12px] font-medium tracking-wider uppercase px-6 py-2.5 rounded-[40px] shadow-sm transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-[#8B1A1A] hover:text-white hover:border-[#8B1A1A]"
                         >
@@ -92,15 +92,15 @@ export default function ProductCard({ product }: ProductCardProps) {
                     )}
                 </div>
 
-                <div className="w-full h-[1px] bg-[#E8E3DD] my-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="w-full h-[1px] bg-[#E8E3DD] my-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300" />
 
                 <button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
-                    className={`flex items-center justify-center w-full gap-2 py-2 text-[12px] font-medium uppercase tracking-wider transition-all duration-300 ${
+                    className={`flex items-center justify-center w-full gap-2 py-2 lg:py-0 text-[12px] font-medium uppercase tracking-wider transition-all duration-300 ${
                         isOutOfStock
                             ? 'text-[#AFA8A3] cursor-not-allowed'
-                            : 'text-[#8B1A1A] hover:text-[#C8962E] opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0'
+                            : 'text-[#8B1A1A] hover:text-[#C8962E] opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0'
                     }`}
                     id={`add-to-cart-${product.id}`}
                 >

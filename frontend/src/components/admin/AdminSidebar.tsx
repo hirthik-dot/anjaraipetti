@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Package, ShoppingCart, Users, LogOut, ChefHat } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingCart, Users, LogOut, ChefHat, X } from 'lucide-react';
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ onClose }: { onClose?: () => void }) {
     const pathname = usePathname();
 
     const links = [
@@ -23,8 +23,8 @@ export default function AdminSidebar() {
     return (
         <aside className="w-64 min-h-screen bg-[#2A2626] text-white flex flex-col shrink-0 font-sans" id="admin-sidebar">
             {/* Elegant Header */}
-            <div className="p-6 border-b border-[#E8E3DD]/10 fade-in-up">
-                <Link href="/admin/dashboard" className="flex items-center gap-3">
+            <div className="p-6 border-b border-[#E8E3DD]/10 flex items-center justify-between fade-in-up">
+                <Link href="/admin/dashboard" className="flex items-center gap-3" onClick={onClose}>
                     <div className="w-10 h-10 rounded-full border border-[#E8E3DD]/20 flex items-center justify-center bg-[#FFFFFF]/5">
                         <ChefHat className="w-5 h-5 text-[#C8962E]" strokeWidth={1.5} />
                     </div>
@@ -33,6 +33,11 @@ export default function AdminSidebar() {
                         <p className="text-[10px] uppercase tracking-[0.2em] text-[#C8962E]">Admin Panel</p>
                     </div>
                 </Link>
+                {onClose && (
+                    <button onClick={onClose} className="lg:hidden p-2 text-white/50 hover:text-white transition-colors">
+                        <X className="w-5 h-5" />
+                    </button>
+                )}
             </div>
 
             {/* Navigation */}
@@ -46,6 +51,7 @@ export default function AdminSidebar() {
                         <Link
                             key={link.href}
                             href={link.href}
+                            onClick={onClose}
                             className={`flex items-center gap-3 px-4 py-3 rounded-[6px] text-[13px] font-medium transition-all duration-300 ${
                                 isActive
                                     ? 'bg-[#C8962E] text-[#2A2626] shadow-md shadow-[#C8962E]/20'

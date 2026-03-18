@@ -183,7 +183,7 @@ export default function ProductForm({ categories, initialValues, onSubmit, isLoa
                         {values.images.map((img, i) => (
                             <div key={i} className="relative group rounded-[4px] overflow-hidden border border-[#E8E3DD]">
                                 <img src={img} alt="" className="w-24 h-24 object-cover" />
-                                <button type="button" onClick={() => removeImage(i)} className="absolute inset-0 bg-[#8B1A1A]/90 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button type="button" onClick={() => removeImage(i)} className="absolute inset-0 bg-[#8B1A1A]/90 text-white flex items-center justify-center opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity">
                                     <X className="w-6 h-6" strokeWidth={1.5} />
                                 </button>
                             </div>
@@ -193,7 +193,7 @@ export default function ProductForm({ categories, initialValues, onSubmit, isLoa
             </div>
 
             {/* Toggles */}
-            <div className="flex gap-10 pt-4 border-t border-[#E8E3DD]">
+            <div className="flex flex-col sm:flex-row gap-6 sm:gap-10 pt-4 border-t border-[#E8E3DD]">
                 <label className="flex items-center gap-3 cursor-pointer group">
                     <div className={`w-5 h-5 rounded-[4px] border flex items-center justify-center transition-colors ${values.isActive ? 'bg-[#8B1A1A] border-[#8B1A1A]' : 'bg-white border-[#E8E3DD] group-hover:border-[#8B1A1A]'}`}>
                         {values.isActive && <div className="w-2.5 h-2.5 bg-white rounded-sm" />}
