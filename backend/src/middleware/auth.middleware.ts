@@ -1,15 +1,24 @@
 import { Request, Response, NextFunction } from 'express';
+import { ParamsDictionary } from 'express-serve-static-core';
+import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
 import { firebaseAuth } from '../lib/firebase-admin';
 import { prisma } from '../lib/prisma';
 
 // Extended Request type
-export interface AuthRequest extends Request {
+export interface AuthRequest extends Request<
+    ParamsDictionary,
+    any,
+    any,
+    ParsedQs
+> {
     user?: {
         id: string;
-        phone: string;
-        name: string;
-        firebaseUid: string;
+        phone?: string;
+        name?: string;
+        firebaseUid?: string;
+        role?: string;
+        email?: string;
     };
     admin?: {
         id: string;
