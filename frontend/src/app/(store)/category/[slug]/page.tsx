@@ -31,27 +31,29 @@ export default function CategoryPage() {
     }, [slug]);
 
     return (
-        <div className="pt-24 pb-16">
+        <div className="pt-32 pb-24 bg-[#FAF8F5] min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 {/* Header */}
-                <div className="text-center mb-12">
-                    <h1 className="text-4xl font-heading font-bold text-[--color-brown] mb-2">
+                <div className="text-left mb-16 border-b border-[#E8E3DD] pb-8 fade-in-up">
+                    <h1 className="text-4xl sm:text-5xl font-serif text-[#2A2626] mb-4">
                         {category ? (isEnglish ? category.name : category.nameTa) : slug}
                     </h1>
-                    <div className="w-16 h-1 bg-gradient-to-r from-[--color-primary] to-[--color-secondary] mx-auto rounded-full" />
+                    
                     {category?._count && (
-                        <p className="text-[--color-brown]/50 mt-3">
-                            {category._count.products} {isEnglish ? 'products' : 'பொருட்கள்'}
+                        <p className="text-[14px] text-[#6B6363] tracking-wide">
+                            {category._count.products} {isEnglish ? 'Products Available' : 'பொருட்கள்'}
                         </p>
                     )}
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center py-20">
-                        <div className="w-12 h-12 border-4 border-[--color-cream] border-t-[--color-primary] rounded-full animate-spin" />
+                    <div className="flex justify-center py-32">
+                        <div className="w-8 h-8 border-2 border-[#E8E3DD] border-t-[#8B1A1A] rounded-full animate-spin" />
                     </div>
                 ) : (
-                    <ProductGrid products={products} />
+                    <div className="fade-in-up delay-1">
+                        <ProductGrid products={products} />
+                    </div>
                 )}
             </div>
         </div>
