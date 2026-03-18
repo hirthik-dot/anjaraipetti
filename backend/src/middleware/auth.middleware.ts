@@ -1,31 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { ParamsDictionary } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 import jwt from 'jsonwebtoken';
 import { firebaseAuth } from '../lib/firebase-admin';
 import { prisma } from '../lib/prisma';
 
-// Extended Request type
-export interface AuthRequest extends Request<
-    ParamsDictionary,
-    any,
-    any,
-    ParsedQs
-> {
-    user?: {
-        id: string;
-        phone?: string;
-        name?: string;
-        firebaseUid?: string;
-        role?: string;
-        email?: string;
-    };
-    admin?: {
-        id: string;
-        email: string;
-        name: string;
-        role: string;
-    };
+export interface AuthRequest extends Request {
+  user?: {
+    id: string;
+    role: string;
+    email?: string;
+    phone?: string;
+  };
 }
 
 // Verify customer auth (Firebase token or JWT cookie)
@@ -66,11 +50,12 @@ export const authenticateUser = async (
                 return;
             }
 
-            req.user = {
+            (req as any).user = {
                 id: user.id,
                 phone: user.phone,
                 name: user.name,
                 firebaseUid: user.firebaseUid,
+                role: 'user'
             };
             next();
         } catch {
@@ -90,11 +75,12 @@ export const authenticateUser = async (
                     return;
                 }
 
-                req.user = {
+                (req as any).user = {
                     id: user.id,
                     phone: user.phone,
                     name: user.name,
                     firebaseUid: user.firebaseUid,
+                    role: 'user'
                 };
                 next();
             } catch {
@@ -156,7 +142,7 @@ export const authenticateAdmin = async (
                 return;
             }
 
-            req.admin = {
+            (req as any).admin = {
                 id: admin.id,
                 email: admin.email,
                 name: admin.name,

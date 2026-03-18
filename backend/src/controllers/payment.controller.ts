@@ -10,10 +10,10 @@ import {
 
 // POST /api/payment/create-order
 export const createPaymentOrder = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { orderId } = req.body;
+    const { orderId } = (req as any).body;
 
     const order = await prisma.order.findFirst({
-        where: { id: orderId, userId: req.user!.id },
+        where: { id: orderId, userId: (req as any).user!.id },
     });
 
     if (!order) {
@@ -46,7 +46,7 @@ export const createPaymentOrder = asyncHandler(async (req: AuthRequest, res: Res
 
 // POST /api/payment/verify
 export const verifyPayment = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = req.body;
+    const { razorpayOrderId, razorpayPaymentId, razorpaySignature } = (req as any).body;
 
     // Verify signature
     const isValid = verifyRazorpaySignature(
@@ -97,7 +97,7 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response) =>
     }
 
     // Verify webhook signature with raw body
-    const rawBody = (req as any).rawBody || JSON.stringify(req.body);
+    const rawBody = (req as any).rawBody || JSON.stringify((req as any).body);
     const isValid = verifyWebhookSignature(rawBody, signature);
 
     if (!isValid) {
@@ -109,7 +109,7 @@ export const handleWebhook = asyncHandler(async (req: Request, res: Response) =>
         return;
     }
 
-    const event = req.body;
+    const event = (req as any).body;
 
     if (event.event === 'payment.captured') {
         const payment = event.payload.payment.entity;

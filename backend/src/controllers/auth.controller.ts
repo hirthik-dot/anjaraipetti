@@ -8,7 +8,7 @@ import { asyncHandler } from '../middleware/errorHandler.middleware';
 
 // POST /api/auth/verify — Firebase token → create/login user
 export const verifyFirebaseToken = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { idToken, name } = req.body;
+    const { idToken, name } = (req as any).body;
 
     // Verify Firebase token
     const decodedToken = await firebaseAuth.verifyIdToken(idToken);
@@ -73,7 +73,7 @@ export const verifyFirebaseToken = asyncHandler(async (req: AuthRequest, res: Re
 
 // POST /api/auth/admin/login
 export const adminLogin = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { email, password } = req.body;
+    const { email, password } = (req as any).body;
 
     const admin = await prisma.admin.findUnique({
         where: { email },
@@ -137,9 +137,9 @@ export const logout = asyncHandler(async (_req: AuthRequest, res: Response) => {
 
 // GET /api/auth/me
 export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
-    if (req.user) {
+    if ((req as any).user) {
         const user = await prisma.user.findUnique({
-            where: { id: req.user.id },
+            where: { id: (req as any).user.id },
             include: { addresses: true },
         });
 
@@ -150,14 +150,14 @@ export const getMe = asyncHandler(async (req: AuthRequest, res: Response) => {
         return;
     }
 
-    if (req.admin) {
+    if ((req as any).admin) {
         res.json({
             success: true,
             data: {
                 admin: {
-                    id: req.admin.id,
-                    name: req.admin.name,
-                    email: req.admin.email,
+                    id: (req as any).admin.id,
+                    name: (req as any).admin.name,
+                    email: (req as any).admin.email,
                     role: 'admin',
                 },
             },

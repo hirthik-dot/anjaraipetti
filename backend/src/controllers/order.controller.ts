@@ -13,8 +13,8 @@ const generateOrderNumber = (): string => {
 
 // POST /api/orders — Create order
 export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { items, address, paymentMode, notes, name, email } = req.body;
-    const userId = req.user!.id;
+    const { items, address, paymentMode, notes, name, email } = (req as any).body;
+    const userId = (req as any).user!.id;
 
     // Update user name/email if provided
     if (name || email) {
@@ -131,7 +131,7 @@ export const createOrder = asyncHandler(async (req: AuthRequest, res: Response) 
 // GET /api/orders/my — User's order history
 export const getMyOrders = asyncHandler(async (req: AuthRequest, res: Response) => {
     const orders = await prisma.order.findMany({
-        where: { userId: req.user!.id },
+        where: { userId: (req as any).user!.id },
         include: {
             items: { include: { product: true } },
         },
@@ -148,8 +148,8 @@ export const getMyOrders = asyncHandler(async (req: AuthRequest, res: Response) 
 export const getOrder = asyncHandler(async (req: AuthRequest, res: Response) => {
     const order = await prisma.order.findFirst({
         where: {
-            id: req.params.id,
-            userId: req.user!.id,
+            id: (req as any).params.id,
+            userId: (req as any).user!.id,
         },
         include: {
             items: { include: { product: true } },

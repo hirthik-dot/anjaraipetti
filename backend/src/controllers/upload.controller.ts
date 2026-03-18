@@ -5,7 +5,7 @@ import { uploadImage, deleteImage } from '../services/cloudinary.service';
 
 // POST /api/upload/image — Upload to Cloudinary
 export const uploadProductImage = asyncHandler(async (req: AuthRequest, res: Response) => {
-    if (!req.file) {
+    if (!(req as any).file) {
         res.status(400).json({
             success: false,
             message: 'No file uploaded',
@@ -14,7 +14,7 @@ export const uploadProductImage = asyncHandler(async (req: AuthRequest, res: Res
         return;
     }
 
-    const result = await uploadImage(req.file.path);
+    const result = await uploadImage((req as any).file.path);
 
     res.json({
         success: true,
@@ -27,7 +27,7 @@ export const uploadProductImage = asyncHandler(async (req: AuthRequest, res: Res
 
 // DELETE /api/upload/image — Delete from Cloudinary
 export const deleteProductImage = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { publicId } = req.body;
+    const { publicId } = (req as any).body;
 
     if (!publicId) {
         res.status(400).json({

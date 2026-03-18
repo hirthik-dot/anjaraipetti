@@ -72,12 +72,12 @@ export const getAdminProducts = asyncHandler(async (_req: AuthRequest, res: Resp
 // POST /api/admin/products — Create product
 export const createProduct = asyncHandler(async (req: AuthRequest, res: Response) => {
     const product = await prisma.product.create({
-        data: req.body,
+        data: (req as any).body,
         include: { category: true },
     });
 
     await createAuditLog(
-        req.admin!.id,
+        (req as any).admin!.id,
         'CREATE',
         'Product',
         product.id,
@@ -93,7 +93,7 @@ export const createProduct = asyncHandler(async (req: AuthRequest, res: Response
 // PUT /api/admin/products/:id — Update product
 export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response) => {
     const existing = await prisma.product.findUnique({
-        where: { id: req.params.id },
+        where: { id: (req as any).params.id },
     });
 
     if (!existing) {
@@ -106,17 +106,17 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
     }
 
     const product = await prisma.product.update({
-        where: { id: req.params.id },
-        data: req.body,
+        where: { id: (req as any).params.id },
+        data: (req as any).body,
         include: { category: true },
     });
 
     await createAuditLog(
-        req.admin!.id,
+        (req as any).admin!.id,
         'UPDATE',
         'Product',
         product.id,
-        { changes: req.body }
+        { changes: (req as any).body }
     );
 
     res.json({
@@ -128,7 +128,7 @@ export const updateProduct = asyncHandler(async (req: AuthRequest, res: Response
 // DELETE /api/admin/products/:id — Delete product
 export const deleteProduct = asyncHandler(async (req: AuthRequest, res: Response) => {
     const existing = await prisma.product.findUnique({
-        where: { id: req.params.id },
+        where: { id: (req as any).params.id },
     });
 
     if (!existing) {
@@ -141,15 +141,15 @@ export const deleteProduct = asyncHandler(async (req: AuthRequest, res: Response
     }
 
     await prisma.product.update({
-        where: { id: req.params.id },
+        where: { id: (req as any).params.id },
         data: { isActive: false },
     });
 
     await createAuditLog(
-        req.admin!.id,
+        (req as any).admin!.id,
         'DELETE',
         'Product',
-        req.params.id,
+        (req as any).params.id,
         { name: existing.name }
     );
 
@@ -161,7 +161,7 @@ export const deleteProduct = asyncHandler(async (req: AuthRequest, res: Response
 
 // GET /api/admin/orders — All orders with filters
 export const getAdminOrders = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { status, page = '1', limit = '20' } = req.query;
+    const { status, page = '1', limit = '20' } = (req as any).query;
 
     const where: any = {};
     if (status) where.orderStatus = status;
@@ -201,7 +201,7 @@ export const getAdminOrders = asyncHandler(async (req: AuthRequest, res: Respons
 // GET /api/admin/orders/:id — Order detail
 export const getAdminOrder = asyncHandler(async (req: AuthRequest, res: Response) => {
     const order = await prisma.order.findUnique({
-        where: { id: req.params.id },
+        where: { id: (req as any).params.id },
         include: {
             user: true,
             items: { include: { product: true } },
@@ -225,10 +225,10 @@ export const getAdminOrder = asyncHandler(async (req: AuthRequest, res: Response
 
 // PUT /api/admin/orders/:id/status — Update order status
 export const updateOrderStatus = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { orderStatus } = req.body;
+    const { orderStatus } = (req as any).body;
 
     const order = await prisma.order.update({
-        where: { id: req.params.id },
+        where: { id: (req as any).params.id },
         data: { orderStatus },
         include: {
             user: true,
@@ -237,7 +237,7 @@ export const updateOrderStatus = asyncHandler(async (req: AuthRequest, res: Resp
     });
 
     await createAuditLog(
-        req.admin!.id,
+        (req as any).admin!.id,
         'UPDATE_STATUS',
         'Order',
         order.id,
@@ -252,7 +252,7 @@ export const updateOrderStatus = asyncHandler(async (req: AuthRequest, res: Resp
 
 // GET /api/admin/customers — All customers
 export const getCustomers = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { page = '1', limit = '20' } = req.query;
+    const { page = '1', limit = '20' } = (req as any).query;
     const pageNum = parseInt(page as string);
     const limitNum = parseInt(limit as string);
     const skip = (pageNum - 1) * limitNum;
@@ -290,7 +290,7 @@ export const getCustomers = asyncHandler(async (req: AuthRequest, res: Response)
 
 // GET /api/admin/audit-logs — Audit trail
 export const getAuditLogs = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { page = '1', limit = '50' } = req.query;
+    const { page = '1', limit = '50' } = (req as any).query;
     const pageNum = parseInt(page as string);
     const limitNum = parseInt(limit as string);
     const skip = (pageNum - 1) * limitNum;
