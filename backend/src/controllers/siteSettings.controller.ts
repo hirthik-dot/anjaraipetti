@@ -70,7 +70,7 @@ export const uploadLogo = asyncHandler(async (req: AuthRequest, res: Response) =
     });
 });
 
-// DELETE /api/admin/site-settings/logo — Reset logo to default
+// DELETE /api/admin/site-settings/logo--  — Reset logo= to default
 export const resetLogo = asyncHandler(async (_req: AuthRequest, res: Response) => {
     const settings = await prisma.siteSettings.upsert({
         where: { id: 1 },
