@@ -8,8 +8,8 @@ import { useLanguage } from '@/hooks/useLanguage';
 
 const fallbackCategories = [
     { name: 'Masala', nameTa: 'மசாலா', slug: 'masala', image: 'https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=800&auto=format&fit=crop', desc: 'Authentic stone-ground spice blends roasted to perfection.' },
-    { name: 'Sweets', nameTa: 'இனிப்புகள்', slug: 'sweets', image: 'https://images.unsplash.com/photo-1610486259061-0ae75e381023?q=80&w=800&auto=format&fit=crop', desc: 'Traditional sweets made with pure ghee and raw sugar.' },
-    { name: 'Snacks', nameTa: 'தின்பண்டங்கள்', slug: 'snacks', image: 'https://images.unsplash.com/photo-1601050690597-df0568a70d50?q=80&w=800&auto=format&fit=crop', desc: 'Crispy, savory evening snacks fried in fresh groundnut oil.' },
+    { name: 'Sweets', nameTa: 'இனிப்புகள்', slug: 'sweets', image: 'https://images.unsplash.com/photo-1541529086526-db283c563270?q=80&w=800&auto=format&fit=crop', desc: 'Traditional sweets made with pure ghee and raw sugar.' },
+    { name: 'Snacks', nameTa: 'தின்பண்டங்கள்', slug: 'snacks', image: 'https://images.unsplash.com/photo-1604328471151-b52226907017?q=80&w=800&auto=format&fit=crop', desc: 'Crispy, savory evening snacks fried in fresh groundnut oil.' },
 ];
 
 interface CategoryGridProps {
@@ -51,7 +51,7 @@ export default function CategoryGrid({ categories = [] }: CategoryGridProps) {
                             >
                                 <div className="relative aspect-[4/5] overflow-hidden rounded-[8px] mb-6 border border-[#E8E3DD]">
                                     <Image
-                                        src={apiCat?.image || cat.image}
+                                        src={(apiCat?.image && apiCat.image.trim().length > 10) ? apiCat.image : cat.image}
                                         alt={isEnglish ? (apiCat?.name || cat.name) : (apiCat?.nameTa || cat.nameTa)}
                                         fill
                                         className="object-cover transition-transform duration-[1.5s] ease-in-out group-hover:scale-110"

@@ -13,9 +13,31 @@ export interface Product {
     isActive: boolean;
     isFeatured: boolean;
     weight: string;
+    makingVideoUrl?: string | null;
     createdAt: string;
     updatedAt: string;
 }
+
+export interface CarouselSlide {
+    id: string;
+    imageUrl: string;
+    headline?: string;
+    subtext?: string;
+    ctaText: string;
+    ctaLink: string;
+    sortOrder: number;
+    isActive: boolean;
+    createdAt: string;
+}
+
+export interface SiteSettings {
+    id: number;
+    logoUrl?: string | null;
+    tickerMessages: string[];
+    tickerEnabled: boolean;
+    tickerSpeed: 'slow' | 'normal' | 'fast';
+}
+
 
 export interface Category {
     id: string;

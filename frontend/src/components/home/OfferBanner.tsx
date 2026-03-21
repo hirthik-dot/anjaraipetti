@@ -22,7 +22,7 @@ export default function OfferBanner() {
                     Special Offer
                 </span>
                 
-                <h2 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-medium mb-8 leading-[1.1] tracking-tight">
+                <h2 className="text-4xl sm:text-5xl lg:text-7xl font-serif font-medium mb-8 leading-[1.1] tracking-tight text-white" style={{ color: '#FFFFFF' }}>
                     {t('offerTitle')}
                 </h2>
 

@@ -1,18 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { firebaseAuth } from '../lib/firebase-admin';
 import { prisma } from '../lib/prisma';
 
 export interface AuthRequest extends Request {
-  user?: {
-    id: string;
-    role: string;
-    email?: string;
-    phone?: string;
-  };
+    user?: {
+        id: string;
+        role: string;
+        email?: string;
+        phone?: string;
+    };
 }
 
-// Verify customer auth (Firebase token or JWT cookie)
+// Verify customer auth (JWT cookie or Bearer token)
 export const authenticateUser = async (
     req: AuthRequest,
     res: Response,
@@ -31,7 +30,6 @@ export const authenticateUser = async (
         }
 
         try {
-            // Try JWT first
             const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
                 userId: string;
                 role?: string;
@@ -54,42 +52,15 @@ export const authenticateUser = async (
                 id: user.id,
                 phone: user.phone,
                 name: user.name,
-                firebaseUid: user.firebaseUid,
                 role: 'user'
             };
             next();
         } catch {
-            // If JWT fails, try Firebase token
-            try {
-                const decodedFirebase = await firebaseAuth.verifyIdToken(token);
-                const user = await prisma.user.findUnique({
-                    where: { firebaseUid: decodedFirebase.uid },
-                });
-
-                if (!user) {
-                    res.status(401).json({
-                        success: false,
-                        message: 'User not found. Please register first.',
-                        code: 'USER_NOT_REGISTERED',
-                    });
-                    return;
-                }
-
-                (req as any).user = {
-                    id: user.id,
-                    phone: user.phone,
-                    name: user.name,
-                    firebaseUid: user.firebaseUid,
-                    role: 'user'
-                };
-                next();
-            } catch {
-                res.status(401).json({
-                    success: false,
-                    message: 'Invalid or expired token',
-                    code: 'INVALID_TOKEN',
-                });
-            }
+            res.status(401).json({
+                success: false,
+                message: 'Invalid or expired token',
+                code: 'INVALID_TOKEN',
+            });
         }
     } catch (error) {
         next(error);

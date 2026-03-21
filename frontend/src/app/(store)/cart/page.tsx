@@ -22,7 +22,7 @@ export default function CartPage() {
 
     if (items.length === 0) {
         return (
-            <div className="pt-32 pb-24 min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center animate-fade-in-up">
+            <div className="pt-12 pb-24 min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center animate-fade-in-up">
                 <ShoppingBag className="w-16 h-16 text-[#6B6363]/30 mb-8" strokeWidth={1} />
                 <h1 className="text-3xl font-serif text-[#2A2626] mb-4">{t('cartEmpty')}</h1>
                 <p className="text-[#6B6363] text-[15px] font-light mb-10 tracking-wide">Add some delicious items to your cart!</p>
@@ -34,7 +34,7 @@ export default function CartPage() {
     }
 
     return (
-        <div className="pt-32 pb-24 bg-[#FAF8F5] min-h-screen">
+        <div className="pt-8 md:pt-12 pb-24 bg-[#FAF8F5] min-h-screen">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <Link href="/" className="inline-flex items-center gap-2 text-[12px] font-medium uppercase tracking-wider text-[#6B6363] hover:text-[#8B1A1A] mb-12 transition-colors">
                     <ArrowLeft className="w-4 h-4" />

@@ -17,6 +17,7 @@ model User {
   orders      Order[]
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  lastLoginAt DateTime? @updatedAt
 }
 
 model Address {
@@ -50,23 +51,44 @@ model Category {
 }
 
 model Product {
-  id          String      @id @default(cuid())
-  name        String
-  nameTa      String
-  description String
-  descTa      String
-  price       Float
-  mrp         Float
-  stock       Int         @default(0)
-  images      String[]
-  categoryId  String
-  category    Category    @relation(fields: [categoryId], references: [id])
-  orderItems  OrderItem[]
-  isActive    Boolean     @default(true)
-  isFeatured  Boolean     @default(false)
-  weight      String
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  id              String      @id @default(cuid())
+  name            String
+  nameTa          String
+  description     String
+  descTa          String
+  price           Float
+  mrp             Float
+  stock           Int         @default(0)
+  images          String[]
+  categoryId      String
+  category        Category    @relation(fields: [categoryId], references: [id])
+  orderItems      OrderItem[]
+  isActive        Boolean     @default(true)
+  isFeatured      Boolean     @default(false)
+  weight          String
+  makingVideoUrl  String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model CarouselSlide {
+  id        String   @id @default(cuid())
+  imageUrl  String
+  headline  String?
+  subtext   String?
+  ctaText   String   @default("Shop Now")
+  ctaLink   String   @default("/category/masala")
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id             Int      @id @default(1)
+  logoUrl        String?
+  tickerMessages Json     @default("[\"Minimum order value is Rs.250/-\",\"COD Available for all orders\"]")
+  tickerEnabled  Boolean  @default(true)
+  tickerSpeed    String   @default("normal")
 }
 
 model Order {

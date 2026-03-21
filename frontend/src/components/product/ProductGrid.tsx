@@ -12,7 +12,7 @@ export default function ProductGrid({ products, title }: ProductGridProps) {
     if (products.length === 0) {
         return (
             <div className="text-center py-16">
-                <p className="text-[--color-brown]/50 text-lg">No products found</p>
+                <p className="text-[#6B6363] text-[16px]">No products found</p>
             </div>
         );
     }
@@ -20,11 +20,11 @@ export default function ProductGrid({ products, title }: ProductGridProps) {
     return (
         <div>
             {title && (
-                <h2 className="text-3xl font-heading font-bold text-[--color-brown] mb-8">
+                <h2 className="text-[22px] md:text-3xl font-serif font-bold text-[#2A2626] mb-6 md:mb-8">
                     {title}
                 </h2>
             )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 stagger-children">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-6">
                 {products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                 ))}

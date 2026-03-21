@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import FloatingSpices from "@/components/FloatingSpices";
 
 export const metadata: Metadata = {
   title: "Anjaraipetti - A Pinch of Magic | Tamil Nadu Homemade Food Store",
@@ -25,32 +26,35 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body className="antialiased overflow-x-hidden w-full">
-        {children}
-        <Toaster
-          position="top-center"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: '#2C1810',
-              color: '#FDF6EC',
-              fontFamily: "'Lato', sans-serif",
-              borderRadius: '12px',
-              padding: '12px 16px',
-            },
-            success: {
-              iconTheme: {
-                primary: '#C8962E',
-                secondary: '#FDF6EC',
+        <FloatingSpices />
+        <div className="relative z-10 min-h-screen flex flex-col">
+          {children}
+          <Toaster
+            position="top-center"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: '#2C1810',
+                color: '#FDF6EC',
+                fontFamily: "'Lato', sans-serif",
+                borderRadius: '12px',
+                padding: '12px 16px',
               },
-            },
-            error: {
-              iconTheme: {
-                primary: '#EF4444',
-                secondary: '#FDF6EC',
+              success: {
+                iconTheme: {
+                  primary: '#C8962E',
+                  secondary: '#FDF6EC',
+                },
               },
-            },
-          }}
-        />
+              error: {
+                iconTheme: {
+                  primary: '#EF4444',
+                  secondary: '#FDF6EC',
+                },
+              },
+            }}
+          />
+        </div>
       </body>
     </html>
   );

@@ -11,6 +11,9 @@ interface AuthState {
     setUser: (user: User, token: string) => void;
     logout: () => void;
     fetchUser: () => Promise<void>;
+    sendOTP: (phone: string) => Promise<void>;
+    verifyOTP: (phone: string, otp: string) => Promise<void>;
+    resendOTP: (phone: string) => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -24,6 +27,30 @@ export const useAuthStore = create<AuthState>()(
             setUser: (user: User, token: string) => {
                 localStorage.setItem('token', token);
                 set({ user, token, isAuthenticated: true });
+            },
+
+            sendOTP: async (phone: string) => {
+                const res = await api.post('/auth/send-otp', { phone });
+                if (res.status >= 400 || res.data?.message?.includes('Failed')) {
+                    throw new Error(res.data?.message || 'Failed to send OTP');
+                }
+            },
+
+            verifyOTP: async (phone: string, otp: string) => {
+                const res = await api.post('/auth/verify-otp', { phone, otp });
+                if (res.status >= 400 || !res.data?.token) {
+                    throw new Error(res.data?.message || 'Failed to verify OTP');
+                }
+                const data = res.data;
+                localStorage.setItem('token', data.token);
+                set({ user: data.user, token: data.token, isAuthenticated: true });
+            },
+
+            resendOTP: async (phone: string) => {
+                const res = await api.post('/auth/resend-otp', { phone });
+                if (res.status >= 400 || res.data?.message?.includes('Failed')) {
+                    throw new Error(res.data?.message || 'Failed to resend OTP');
+                }
             },
 
             logout: () => {

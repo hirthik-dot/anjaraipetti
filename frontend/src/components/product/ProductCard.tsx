@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { ShoppingBag, Eye } from 'lucide-react';
+import { ShoppingBag, ShoppingCart, Heart, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useCartStore } from '@/store/cartStore';
 import { Product } from '@/types';
@@ -29,78 +29,103 @@ export default function ProductCard({ product }: ProductCardProps) {
     };
 
     return (
-        <div className="group relative bg-[#FFFFFF] rounded-[8px] overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-[#2A2626]/5 border border-[#E8E3DD]"
-            id={`product-${product.id}`}>
-
-            {/* Subtle Discount Badge */}
+        <div
+            className="group/card relative rounded overflow-hidden transition-all duration-300 md:hover:translate-y-[-4px] md:hover:shadow-lg border border-[#E8E3DD] tap-feedback bg-white"
+            id={`product-${product.id}`}
+        >
+            {/* Discount Badge */}
             {discount > 0 && (
-                <div className="absolute top-4 left-4 z-10 px-2.5 py-1 bg-[#2A2626] text-[#FFFFFF] text-[10px] font-medium tracking-widest uppercase rounded-[2px]">
+                <div className="absolute top-3 left-3 z-10 px-2.5 py-1 bg-[#2A2626] text-[#FFFFFF] text-[10px] font-bold tracking-widest uppercase rounded-sm">
                     {discount}% {t('off')}
                 </div>
             )}
 
-            {/* Image Area */}
-            <Link href={`/products/${product.id}`} className="block relative aspect-square overflow-hidden bg-[#FAF8F5]">
-                <Image
-                    src={product.images[0] || '/placeholder.jpg'}
-                    alt={isEnglish ? product.name : product.nameTa}
-                    fill
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-                />
+            {/* Image Area — Amber Square Background */}
+            <Link href={`/products/${product.id}`} className="block relative aspect-square overflow-hidden" style={{ backgroundColor: '#F5A623', padding: '16px' }}>
+                <div className="relative w-full h-full flex items-center justify-center">
+                    <Image
+                        src={product.images[0] || '/placeholder.jpg'}
+                        alt={isEnglish ? product.name : product.nameTa}
+                        fill
+                        className="object-contain"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                        loading="lazy"
+                        style={{ maxWidth: '80%', padding: '4px', margin: 'auto' }}
+                    />
+                </div>
 
                 {isOutOfStock && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#FAF8F5]/80 backdrop-blur-[2px]">
-                        <span className="text-[#2A2626] text-[11px] font-semibold tracking-widest uppercase border border-[#2A2626] px-4 py-2 bg-white">
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[2px]">
+                        <span className="text-white text-[11px] font-semibold tracking-widest uppercase border border-white px-4 py-2 bg-black/30">
                             {t('outOfStock')}
-                        </span>
-                    </div>
-                )}
-
-                {/* Elegant Quick View - Only visible on hover for desktop, persistent small icon for mobile maybe? Actually, just let mobile users tap the image directly to view product. */}
-                {!isOutOfStock && (
-                    <div className="absolute inset-0 bg-transparent flex items-end justify-center pb-6 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 hidden lg:flex">
-                        <span
-                            className="bg-white/90 backdrop-blur-md border border-[#E8E3DD] text-[#2A2626] text-[12px] font-medium tracking-wider uppercase px-6 py-2.5 rounded-[40px] shadow-sm transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-[#8B1A1A] hover:text-white hover:border-[#8B1A1A]"
-                        >
-                            Quick View
                         </span>
                     </div>
                 )}
             </Link>
 
-            {/* Product Info */}
-            <div className="p-5 flex flex-col items-center text-center">
+            {/* Slide-in action menu (Moved outside of Link) */}
+            {!isOutOfStock && (
+                <div className="absolute top-4 right-3 translate-x-[200%] opacity-0 flex flex-col gap-2 transition-all duration-300 ease-out md:group-hover/card:translate-x-0 md:group-hover/card:opacity-100 z-[50]">
+                    <button 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); toast.success('Added to wishlist'); }}
+                        className="w-[42px] h-[42px] bg-white shadow-md flex items-center justify-center text-[#2A2626] hover:bg-[#8B1A1A] hover:text-white transition-colors rounded-full"
+                        aria-label="Add to wishlist"
+                    >
+                        <Heart className="w-5 h-5 stroke-[1.2]" />
+                    </button>
+                    <button 
+                        onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(e); }} 
+                        className="w-[42px] h-[42px] bg-white shadow-md flex items-center justify-center text-[#2A2626] hover:bg-[#8B1A1A] hover:text-white transition-colors rounded-full"
+                        aria-label="Add to cart"
+                    >
+                        <ShoppingCart className="w-5 h-5 stroke-[1.2]" />
+                    </button>
+                    <Link href={`/products/${product.id}`} className="w-[42px] h-[42px] bg-white shadow-md flex items-center justify-center text-[#2A2626] hover:bg-[#8B1A1A] hover:text-white transition-colors rounded-full" aria-label="View details">
+                        <ArrowRight className="w-5 h-5 stroke-[1.2]" />
+                    </Link>
+                </div>
+            )}
+
+            {/* Text Area */}
+            <div className="p-3 md:p-4 bg-white">
                 {product.category && (
-                    <span className="text-[10px] uppercase font-semibold tracking-[0.15em] text-[#C8962E] mb-2">
+                    <span className="text-[10px] uppercase font-semibold tracking-[0.15em] text-[#C8962E] mb-1 block">
                         {isEnglish ? product.category.name : product.category.nameTa}
                     </span>
                 )}
 
-                <Link href={`/products/${product.id}`} className="group-hover:text-[#8B1A1A] transition-colors line-clamp-1 w-full">
-                    <h3 className="text-[16px] font-serif font-medium text-[#2A2626]">
+                <Link href={`/products/${product.id}`}>
+                    <h3 className="text-[13px] md:text-[15px] font-bold uppercase truncate text-[#2A2626]"
+                        style={{ fontFamily: "'Inter', sans-serif" }}>
                         {isEnglish ? product.name : product.nameTa}
                     </h3>
                 </Link>
 
-                <p className="text-[12px] text-[#6B6363] mt-1 mb-3">{product.weight}</p>
+                <p className="text-[12px] text-[#6B6363] mt-0.5">{product.weight}</p>
 
-                <div className="flex items-center justify-center gap-3 mb-2">
-                    <span className="text-[15px] font-medium text-[#2A2626]">₹{product.price}</span>
+                <div className="flex items-center gap-2 mt-1.5">
+                    <span className="text-[13px] font-medium text-[#555]">₹{product.price}</span>
                     {product.mrp > product.price && (
-                        <span className="text-[13px] text-[#6B6363] line-through">₹{product.mrp}</span>
+                        <span className="text-[12px] text-[#999] line-through">₹{product.mrp}</span>
                     )}
                 </div>
 
-                <div className="w-full h-[1px] bg-[#E8E3DD] my-3 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300" />
+                {/* Stars */}
+                <div className="flex gap-0.5 mt-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <span key={star} className="text-[14px]" style={{ color: '#FFD700' }}>★</span>
+                    ))}
+                </div>
+
+                <div className="w-full h-[1px] bg-[#E8E3DD] my-2 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300" />
 
                 <button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
-                    className={`flex items-center justify-center w-full gap-2 py-2 lg:py-0 text-[12px] font-medium uppercase tracking-wider transition-all duration-300 ${
+                    className={`flex items-center justify-center w-full gap-2 py-2 text-[12px] font-medium uppercase tracking-wider transition-all duration-300 min-h-[44px] ${
                         isOutOfStock
                             ? 'text-[#AFA8A3] cursor-not-allowed'
-                            : 'text-[#8B1A1A] hover:text-[#C8962E] opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transform translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0'
+                            : 'text-[#8B1A1A] hover:text-[#C8962E] opacity-100 lg:opacity-0 lg:group-hover:opacity-100'
                     }`}
                     id={`add-to-cart-${product.id}`}
                 >

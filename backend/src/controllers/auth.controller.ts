@@ -1,75 +1,9 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { AuthRequest } from '../middleware/auth.middleware';
-import { firebaseAuth } from '../lib/firebase-admin';
 import { prisma } from '../lib/prisma';
 import { asyncHandler } from '../middleware/errorHandler.middleware';
-
-// POST /api/auth/verify — Firebase token → create/login user
-export const verifyFirebaseToken = asyncHandler(async (req: AuthRequest, res: Response) => {
-    const { idToken, name } = (req as any).body;
-
-    // Verify Firebase token
-    const decodedToken = await firebaseAuth.verifyIdToken(idToken);
-    const { uid, phone_number } = decodedToken;
-
-    if (!phone_number) {
-        res.status(400).json({
-            success: false,
-            message: 'Phone number not found in token',
-            code: 'PHONE_NOT_FOUND',
-        });
-        return;
-    }
-
-    // Check if user exists
-    let user = await prisma.user.findUnique({
-        where: { firebaseUid: uid },
-        include: { addresses: true },
-    });
-
-    if (!user) {
-        // Create new user
-        user = await prisma.user.create({
-            data: {
-                name: name || 'Customer',
-                phone: phone_number,
-                firebaseUid: uid,
-            },
-            include: { addresses: true },
-        });
-    }
-
-    // Create JWT
-    const token = jwt.sign(
-        { userId: user.id, role: 'customer' },
-        process.env.JWT_SECRET!,
-        { expiresIn: '7d' }
-    );
-
-    // Set httpOnly cookie
-    res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
-
-    res.json({
-        success: true,
-        data: {
-            user: {
-                id: user.id,
-                name: user.name,
-                phone: user.phone,
-                email: user.email,
-                addresses: user.addresses,
-            },
-            token,
-        },
-    });
-});
 
 // POST /api/auth/admin/login
 export const adminLogin = asyncHandler(async (req: AuthRequest, res: Response) => {
